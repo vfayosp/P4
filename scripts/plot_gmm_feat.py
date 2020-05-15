@@ -91,7 +91,7 @@ def limsGMM(means, covs, fStd=3):
 
     return min_, max_
 
-def plotGMM(fileGMM, xDim, yDim, percents, colorGmm, filesFeat=None, colorFeat=None, limits=None, subplot=111):
+def plotGMM(fileGMM, xDim, yDim, percents, colorGmm, subplot, filesFeat=None, colorFeat=None, limits=None):
     weights, means, covs = read_gmm(fileGMM)
 
     ax = plt.subplot(subplot)
@@ -117,7 +117,7 @@ def plotGMM(fileGMM, xDim, yDim, percents, colorGmm, filesFeat=None, colorFeat=N
     # en el percentil más estrecho sea 1000. Calculamos el más estrecho como el
     # valor mínimo de p*(1-p)
 
-    numSmp = np.ceil(np.max(1000 / (percents * (1 - percents))) ** 0.5)
+    numSmp = int(np.ceil(np.max(1000 / (percents * (1 - percents))) ** 0.5))
 
     x = np.linspace(min_[0], max_[0], numSmp)
     y = np.linspace(min_[1], max_[1], numSmp)
@@ -142,7 +142,6 @@ def plotGMM(fileGMM, xDim, yDim, percents, colorGmm, filesFeat=None, colorFeat=N
     plt.title(f'Region coverage predicted by {fileGMM}')
     plt.axis('tight')
     plt.axis(limits)
-    plt.show()
 
 
 ########################################################################################################
@@ -153,7 +152,7 @@ USAGE='''
 Draws the regions in space covered with a certain probability by a GMM.
 
 Usage:
-    plotGMM [--help|-h] [options] <file-gmm> [<file-feat>...]
+    plotGMM [--help|-h] [options] <file-gmm>... [<file-feat>...]
 
 Options:
     --yDim INT, -x INT               'x' dimension to use from GMM and feature vectors [default: 0]
@@ -162,19 +161,23 @@ Options:
     --colorGMM STR, -g STR            Color of the GMM regions boundaries [default: red]
     --colorFEAT STR, -f STR           Color of the feature population [default: red]
     --limits xyLimits -l xyLimits     xyLimits are the four values xMin,xMax,yMin,yMax [default: auto]
+    --numberGMM INT, -n INT           Number of GMMs that we want to subplot [default: 1]
 
     --help, -h                        Shows this message
 
 Arguments:
-    <file-gmm>    File with the Gaussian mixture model to be plotted
+    <file-gmm>    Files with the Gaussian mixture models to be plotted
     <file-fear>   Feature files to be plotted along the GMM
 '''
 
 if __name__ == '__main__':
     args = docopt(USAGE)
 
+    numberGMM = int(args['--numberGMM'])
     fileGMM = args['<file-gmm>']
     filesFeat = args['<file-feat>']
+    filesFeat = fileGMM[numberGMM:]
+    fileGMM = fileGMM[:numberGMM]
     xDim = int(args['--xDim'])
     yDim = int(args['--yDim'])
     percents = args['--percents']
@@ -191,6 +194,15 @@ if __name__ == '__main__':
             exit(1)
     else:
         limits = None
+    #print(*fileGMM)
+    #print(*filesFeat)
+    i=0
+    while True:
+        plotGMM(fileGMM[i], xDim, yDim, percents, colorGmm, numberGMM*100+10+i+1, filesFeat, colorFeat, limits)
+        i=i+1
+        if i >= numberGMM:
+            break
+    plt.show()
 
-    plotGMM(fileGMM, xDim, yDim, percents, colorGmm, filesFeat, colorFeat, limits, 111)
-
+    
+    

@@ -14,7 +14,7 @@
 # - db:       directory of the speecon database 
 lists=lists
 w=work
-name_exp=lpcc
+name_exp=one
 db=spk_8mu/speecon
 
 # ------------------------
@@ -81,7 +81,7 @@ fi
 # ----------------------------
 
 ## @file
-# \TODO
+# \HECHO
 # Create your own features with the name compute_$FEAT(), where  $FEAT the name of the feature.
 # - Select (or change) different features, options, etc. Make you best choice and try several options.
 
@@ -138,7 +138,7 @@ for cmd in $*; do
        for dir in $db/BLOCK*/SES* ; do
            name=${dir/*\/}
            echo $name ----
-           gmm_train  -v 1 -T 0.001 -N5 -m 1 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
+           gmm_train  -v 1 -T 2e-05 -N 35 -m 5 -d $w/$FEAT -e $FEAT -g $w/gmm/$FEAT/$name.gmm $lists/class/$name.train || exit 1
            echo
        done
    elif [[ $cmd == test ]]; then

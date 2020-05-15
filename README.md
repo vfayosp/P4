@@ -32,23 +32,46 @@ ejercicios indicados.
 - Analice el script `wav2lp.sh` y explique la misión de los distintos comandos, y sus opciones, involucrados
   en el *pipeline* principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`).
 
+  `sox`-> Se utiliza para convertir de formato wav a formato raw y con una frecuencia de 16k para despues
+  poderlo gestionar con el SPTK.
+  `$X2X`-> Se utiliza para convertir de un tipo de dato a otro. En nuestro caso de short a float.
+  `$FRAME`-> Se utiliza para dividir la señal en tramas. En nuestro caso de 240 muestras con 80 muestras de salto.
+  `$WINDOW`-> Se utiliza para enventanar cada uno de estas tramas. Se puede escoger el filtro y cuantas 
+              muestras se quieren enventanar.
+  `$LPC`-> Se utiliza para calcular los coeficientes de predicción lineal de las tramas. Se puede escoger el orden
+          del predictor y con cuantas muestras se quiere hacer.
+
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros
   de salida de SPTK (líneas 41 a 47 del script `wav2lp.sh`).
 
+  Primero se utilizan los comandos anteriores en cascada para sacar los predictores de cada una de las tramas,
+  seguidamente se crea la cabecera de este tipo de archivos especificando el numero de columnas y el numero de filas.
+
   * ¿Por qué es conveniente usar este formato (u otro parecido)?
+  
+  Para asi tener mejor estructurados los datos y poder sacar la información de manera sencilla
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+	$LPC -l 240 -m $lpcc_order | $LPC2C -m $lpcc_order -M $lpcc_order > $base.lpcc
+
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en
   su fichero <code>scripts/wav2mfcc.sh</code>:
+
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 |  $MFCC -s 8 -l 240 -L 512 -m $mfcc_order > $base.mfcc
 
 ### Extracción de características.
 
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
   para una señal de prueba.
+
+  ![Comparación](https://github.com/vfayosp/P4/blob/fayos-valverde/fotos%20y%20graficos/comparacion_lp_lpcc_mfcc.png)
   
   + ¿Cuál de ellas le parece que contiene más información?
+  
+  Parece tener más información los componenetes mfcc, ya que no son tan lineales como los componentes lp y lpcc.
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3, y rellene la tabla siguiente con los valores obtenidos.
