@@ -8,14 +8,15 @@ cleanup() {
    \rm -f $base.*
 }
 
-if [[ $# != 3 ]]; then
-   echo "$0 lpcc_order input.wav output.lpcc"
+if [[ $# != 4 ]]; then
+   echo "$0 lpc_order cepstrum_order input.wav output.lpcc"
    exit 1
 fi
 
-lpcc_order=$1
-inputfile=$2
-outputfile=$3
+lpc_order=$1
+cepstrum_order=$2
+inputfile=$3
+outputfile=$4
 
 UBUNTU_SPTK=1
 if [[ $UBUNTU_SPTK == 1 ]]; then
@@ -35,11 +36,10 @@ else
 fi
 
 # Main command for feature extration
-sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
-	$LPC -l 240 -m $lpcc_order | $LPC2C -m $lpcc_order -M $lpcc_order > $base.lpcc
+sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order | $LPC2C -m $lpc_order -M $cepstrum_order > $base.lpcc
 
 # Our array files need a header with the number of cols and rows:
-ncol=$((lpcc_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
+ncol=$((cepstrum_order+1)) # lpc p =>  (gain a1 a2 ... ap) 
 nrow=`$X2X +fa < $base.lpcc | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
 
 # Build fmatrix file by placing nrow and ncol in front, and the data after them

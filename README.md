@@ -71,7 +71,8 @@ ejercicios indicados.
   
   + ¿Cuál de ellas le parece que contiene más información?
   
-  Parece tener más información los componenetes mfcc, ya que no son tan lineales como los componentes lp y lpcc.
+  Parece tener más información los componenetes lpcc, ya que estan más concentrados en dos puntos. Los otros coeficientes están
+  más esparcidos.
 
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3, y rellene la tabla siguiente con los valores obtenidos.
@@ -84,6 +85,11 @@ ejercicios indicados.
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
 
+  LPCC: Orden lpcc 19
+        Orden cepstrum 26
+  MFCC: Orden mfcc 13
+        Orden mel-cepstrum 19
+
 ### Entrenamiento y visualización de los GMM.
 
 Complete el código necesario para entrenar modelos GMM.
@@ -91,11 +97,18 @@ Complete el código necesario para entrenar modelos GMM.
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
 
-  ![GMM LOC04](https://github.com/vfayosp/P4/blob/fayos-valverde/fotos%20y%20graficos/gm_ses004)
+  ![GMM LOC04](https://github.com/vfayosp/P4/blob/fayos-valverde/fotos%20y%20graficos/gm_ses004.png)
   
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+
+  Modelos GMM del locutor 4 y 44:
+  Datos de entrenamiento del locutor 4
+  ![GMM 4 y 44 LOC04](https://github.com/vfayosp/P4/blob/fayos-valverde/fotos%20y%20graficos/gmm_ses04_lpcc_ses04.png)
+
+  Datos de entrenamiento del locutor 44
+  ![GMM 4 y 44 LOC44](https://github.com/vfayosp/P4/blob/fayos-valverde/fotos%20y%20graficos/gmm_ses44_lpcc_ses44.png)
 
 ### Reconocimiento del locutor.
 
@@ -103,6 +116,10 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+
+  |                        | LP   | LPCC | MFCC |
+  |------------------------|:----:|:----:|:----:|
+  | Tasa de error          |9,04% |0,76% |8,79% |
 
 ### Verificación del locutor.
 
@@ -112,6 +129,13 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+
+  |                        |         LP       |       LPCC       |       MFCC       |
+  |------------------------|:----------------:|:----------------:|:----------------:|
+  | Cost                   |       83,4       |       13,2       |       76,4       |
+  | Threshold              |0.924207239399991 |0.893346727121306 |0.9092007283127   |
+  | Missed                 |      159/255     |      26/255      |      191/255     |
+  | False Alarm            |      2/1000      |      0/1000      |      0/1000      |
  
 ### Test final y trabajo de ampliación.
 
