@@ -14,8 +14,9 @@
 # - db:       directory of the speecon database 
 lists=lists
 w=work
-name_exp=one
+name_exp=spk
 db=spk_8mu/speecon
+db_final=spk_8mu/sr_test
 
 # ------------------------
 # Usage
@@ -187,20 +188,57 @@ for cmd in $*; do
 
    elif [[ $cmd == finalclass ]]; then
        ## @file
-	   # \TODO
+	   # \HECHO
 	   # Perform the final test on the speaker classification of the files in spk_ima/sr_test/spk_cls.
 	   # The list of users is the same as for the classification task. The list of files to be
 	   # recognized is lists/final/class.test
-       echo "To be implemented ..."
+
+       for filename in $(cat $lists/final/class.test); do
+       mkdir -p `dirname $w/$FEAT/final/$filename.$FEAT`
+       EXEC="wav2lpcc 19 26 $db_final/$filename.wav $w/$FEAT/final/$filename.$FEAT"
+       echo $EXEC && $EXEC || exit 1
+       done        
+
+       find $w/gmm/$FEAT -name '*.gmm' -printf '%P\n' | perl -pe 's/.gmm$//' | sort  > $lists/gmm.list
+       (gmm_classify -d $w/$FEAT/final -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list  $lists/final/class.test | tee $w/class_test.log) || exit 1
+
+        if [[ ! -s $w/class_test.log ]] ; then
+          echo "ERROR: $w/class_test.log not created"
+          exit 1
+       fi
+        Count errors
+       perl -ne 'BEGIN {$ok=0; $err=0}
+                 next unless (/^.*c(...).*SES(...).*$/); 
+                 if ($1 == $2) {$ok++}
+                 else {$err++}
+                 END {printf "nerr=%d\tntot=%d\terror_rate=%.2f%%\n", ($err, $ok+$err, 100*$err/($ok+$err))}' $w/class_test.log | tee -a $w/class_test.log
    
    elif [[ $cmd == finalverif ]]; then
        ## @file
-	   # \TODO
+	   # \HECHO
 	   # Perform the final test on the speaker verification of the files in spk_ima/sr_test/spk_ver.
 	   # The list of legitimate users is lists/final/verif.users, the list of files to be verified
 	   # is lists/final/verif.test, and the list of users claimed by the test files is
 	   # lists/final/verif.test.candidates
-       echo "To be implemented ..."
+
+       for filename in $(cat $lists/final/verif.test); do
+       mkdir -p `dirname $w/$FEAT/final/$filename.$FEAT`
+       EXEC="wav2lpcc 19 26 spk_8mu/sr_test/$filename.wav $w/$FEAT/final/$filename.$FEAT"
+       echo $EXEC && $EXEC || exit 1
+       done 
+
+      gmm_verify -d $w/$FEAT/final -e $FEAT -D $w/gmm/$FEAT -E gmm -w world $lists/gmm.list $lists/final/verif.test $lists/final/verif.test.candidates | tee $w/verif_test.log || exit 1
+
+       if [[ ! -s $w/verif_test.log ]] ; then
+          echo "ERROR: $w/final/verif_test.log not created"
+         exit 1
+       fi
+
+	perl -ane 'print "$F[0]\t$F[1]\t";
+            if ($F[2] > -3.214) {print "1\n"}
+            else {print "0\n"}' verification.log > $w/verif_test1.log
+
+	spk_verif_score $w/verif_test.log | tee $w/verif_test.res
    
    # If the command is not recognize, check if it is the name
    # of a feature and a compute_$FEAT function exists.
