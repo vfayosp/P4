@@ -70,3 +70,27 @@ Some parameters you may want to experiment with:
 - You can edit `train.py` and/or `test.py` and change number of layers,
 activation function, optimizer, learning rate, add dropout, etc.
 
+## Results
+
+Como resultados hemos probado diferentes modelos de redes neuronales para despues poder comparar
+su funcionamiento en la clasificación y ver como los parametros afectan a esta.
+
+Hemos creado un conjunto de 12 redes neuronales con 130, 175 y 250 capas y a la vez con una tasa
+de aprendizaje de 0.001 y 0.00125. Se han hecho con los parametros lp y lpcc.
+
+Se puede ver cada modelo junto con sus graficas en su respectiva carpeta.
+
+Se ha desarrollado tambien un pequeño programa que cuenta la cantidad de errores en clasificación y
+te escribe por pantalla el porcentaje. Es el programa `class_error.py`.
+
+Los resultados estan expresados en el fichero de texto `p_error_class.txt`.
+En este se puede ver como en el caso del lp a cuanto mayor es el numero de capas no es muy relevante
+pero que si la tasa de aprendizaje es mayor la probabilidad de error es mayor.
+En el caso del lpcc se puede ver como el numero de capas afecta negativamente al porcentaje de error 
+pero que la tasa de aprendizaje afecta positivamente al error, es decir a cuantas mas capas mas error 
+y a cuanto mas alto la tasa de aprendizaje menos error.
+
+Para finalizar hemos realizado la clasificacion de la base de datos ciega con el mejor modelo, lpcc con 
+175 capas y una tasa de aprendizaje del 0.00125. Los resultados de esta clasificacion estan en el fichero
+`class_NN.log`.
+
