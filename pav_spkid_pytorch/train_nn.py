@@ -100,6 +100,7 @@ def eval_spkid_epoch(dloader, model, epoch, log_freq):
           ''.format(epoch, m_va_loss, m_va_acc))
     return [m_va_loss], [m_va_acc]
 
+
 def main(opts):
     dset = SpkDataset(opts.db_path, opts.tr_list_file,
                       opts.ext, opts.spk2idx,
@@ -207,14 +208,14 @@ def main(opts):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train MLP for Speaker Classification')
-    parser.add_argument('--db_path', type=str, default='mcp',
-                        help='path to feature files (default: ./mcp)')
+    parser.add_argument('--db_path', type=str, default='features/speecon/lpcc',
+                        help='path to feature files (default: ./features/speecon/lpcc)')
     parser.add_argument('--tr_list_file', type=str, default='cfg/all.train',
                         help='File list of train files (default: cfg/all.train)')
     parser.add_argument('--va_list_file', type=str, default='cfg/all.test',
                         help='File list of eval files (default: cfg/all.test)')
-    parser.add_argument('--ext', type=str, default='mcp', 
-                        help='Extension of feature files (default mcp)')
+    parser.add_argument('--ext', type=str, default='lpcc', 
+                        help='Extension of feature files (default lpcc)')
     parser.add_argument('--spk2idx', type=str, default='cfg/spk2idx.json',
                         help='File to map spk code to spkID: 0,1, .... (def. cfg/spk2idx.json)')
     parser.add_argument('--batch_size', type=int, default=1000, help='batch size (default: 1000)')

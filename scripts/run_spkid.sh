@@ -13,10 +13,10 @@
 # - name_exp: name of the experiment
 # - db:       directory of the speecon database 
 lists=lists
-w=work
-name_exp=spk
-db=spk_8mu/speecon
-db_final=spk_8mu/sr_test
+w=features/sr_test
+name_exp=newnet
+#db=spk_8mu/speecon
+db=spk_8mu/sr_test
 
 # ------------------------
 # Usage
@@ -87,7 +87,7 @@ fi
 # - Select (or change) different features, options, etc. Make you best choice and try several options.
 
 compute_lp() {
-    for filename in $(cat $lists/class/all.train $lists/class/all.test); do
+    for filename in $(cat $lists/final/class.test $lists/final/verif.test); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
         EXEC="wav2lp 8 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
@@ -95,7 +95,7 @@ compute_lp() {
 }
 
 compute_lpcc() {
-    for filename in $(cat $lists/class/all.train $lists/class/all.test); do
+    for filename in $(cat $lists/final/class.test $lists/final/verif.test); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
         EXEC="wav2lpcc 19 26 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
@@ -103,7 +103,7 @@ compute_lpcc() {
 }
 
 compute_mfcc() {
-    for filename in $(cat $lists/class/all.train $lists/class/all.test); do
+    for filename in $(cat $lists/final/class.test $lists/final/verif.test); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
         EXEC="wav2mfcc 13 19 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1

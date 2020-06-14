@@ -1,0 +1,37 @@
+lp:
+hsize=130   lr=0.001
+p_error lp = 31.71975
+
+hsize=175   lr=0.001
+p_error lp = 29.04459
+
+hsize=250   lr=0.001
+p_error lp = 30.31847
+
+hsize=130   lr=0.00125
+p_error lp = 32.22930
+
+hsize=175   lr=0.00125
+p_error lp = 47.38854
+
+hsize=250   lr=0.00125
+p_error lp = 36.43312
+
+lpcc:
+hsize=130   lr=0.001
+p_error lp = 5.22293
+
+hsize=175   lr=0.001
+p_error lp = 5.47771
+
+hsize=250   lr=0.001
+p_error lp = 6.75159
+
+hsize=130   lr=0.00125
+p_error lp = 4.96815
+
+hsize=175   lr=0.00125
+p_error lp = 4.96815
+
+hsize=250   lr=0.00125
+p_error lp = 6.49682

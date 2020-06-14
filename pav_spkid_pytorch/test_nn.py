@@ -82,17 +82,17 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Apply trained MLP to classify')
 
     
-    parser.add_argument('--db_path', type=str, default='mcp',
-                        help='path to feature files (default: ./mcp)')
-    parser.add_argument('--te_list_file', type=str, default='spk_rec.test',
-                        help='list with names of files to classify (default. spk_rec.test)')
+    parser.add_argument('--db_path', type=str, default='features/speecon/lpcc',
+                        help='path to feature files (default: ./features/speecon/lpcc)')
+    parser.add_argument('--te_list_file', type=str, default='cfg/all.test',
+                        help='list with names of files to classify (default. cfg/all.test)')
     parser.add_argument('--weights_ckpt', type=str, default=None, help='model: ckpt file with weigths')
-    parser.add_argument('--log_file', type=str, default='spk_classification.log',
-                        help='result file (default: spk_classification.log')
+    parser.add_argument('--log_file', type=str, default='class_newnet_ampl.log',
+                        help='result file (default: class_newnet_ampl.log')
     parser.add_argument('--train_cfg', type=str, default='ckpt/train.opts',
                         help="arguments used for training (default: ckpt/train.opts)")
-    parser.add_argument('--ext', type=str, default='mcp',
-                        help='Extension of feature files (default mcp)')
+    parser.add_argument('--ext', type=str, default='lpcc',
+                        help='Extension of feature files (default lpcc)')
     parser.add_argument('--verbose', action='store_true', 
                         help='Print information about required time, input shape, etc.')
 
@@ -101,4 +101,3 @@ if __name__ == '__main__':
     if opts.weights_ckpt is None:
         raise ValueError('Weights ckpt not specified!')
     main(opts)
-
